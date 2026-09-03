@@ -1,0 +1,407 @@
+/*
+ * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
+ * Click nbfs://nbhost/SystemFileSystem/Templates/GUIForms/JFrame.java to edit this template
+ */
+package gudang;
+import com.mycompany.gudang.koneksi;
+import java.io.File;
+import javax.swing.JOptionPane;
+import java.sql.*; 
+import javax.swing.*; 
+import java.awt.event.KeyEvent; 
+
+/**
+ *  
+ * @author Pannugroho 
+ */
+
+public class Form_Ganti_Password extends javax.swing.JFrame {
+    koneksi kon = new koneksi(); 
+    /**
+     * Creates new form Form_Ganti_Password
+     */
+    public Form_Ganti_Password() {
+        initComponents();
+        kon.setkoneksi();   
+        }  
+    public String Kode_User;    
+    public String getKodeUser() { 
+        return Kode_User;  
+        }
+    void nonaktif() { 
+        tkode_user.setEnabled(false);  
+        tpassLama.setEnabled(false);   
+        tpassBaru.setEnabled(false);     
+        tkonfirmPass.setEnabled(false);  
+        } 
+    void bersih() {   
+        tpassLama.setText(""); 
+        tpassBaru.setText(""); 
+        tkonfirmPass.setText("");    
+        } 
+    
+      // Method untuk mengubah visibilitas password
+    private void togglePassword(JPasswordField field, JPasswordField tpassBaru, JPasswordField tkonfirmPass, JCheckBox chkBox) {
+        if (chkBox.isSelected()) {
+            // Tampilkan karakter asli (Password Terlihat)
+            field.setEchoChar((char) 0);
+            tpassBaru.setEchoChar((char) 0);
+            tkonfirmPass.setEchoChar((char) 0);
+        } else {
+            // Sembunyikan karakter (Default Bulatan Password)
+            field.setEchoChar('\u2022'); // atau '*' tergantung Look & Feel
+            tpassBaru.setEchoChar('\u2022');
+            tkonfirmPass.setEchoChar('\u2022');
+        }
+    }
+    private void passlama() {  
+       String passLamaStr = String.valueOf(tpassLama.getPassword());
+    
+    if (passLamaStr.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Isi Password Lama terlebih dahulu!");
+        tpassLama.requestFocus();
+        return;
+    }
+
+    try {    
+        // Memeriksa password lama ke database
+        String sql = "SELECT * FROM tb_user WHERE id_user='" + tkode_user.getText() + "' AND password=MD5('" + passLamaStr + "')";                   
+        kon.rs = kon.st.executeQuery(sql);             
+        if (kon.rs.next()) {        
+            // Buka kuncian Password Baru dan Konfirmasi Password
+            tpassBaru.setEnabled(true);       
+            tkonfirmPass.setEnabled(true);
+            tpassBaru.requestFocus();            
+        } else {     
+            JOptionPane.showMessageDialog(null, "Password Lama salah!");                    
+            tpassLama.setText("");
+            tpassLama.requestFocus();                 
+        }          
+    } catch (SQLException e) {     
+        JOptionPane.showMessageDialog(null, "Error Cek Password: " + e.getMessage());   
+    }
+    }
+    private void konfirmpassword()   
+    {     
+        String passLamaStr = String.valueOf(tpassLama.getPassword()).trim();
+        String passBaruStr = String.valueOf(tpassBaru.getPassword()).trim();
+        String konfirmStr = String.valueOf(tkonfirmPass.getPassword()).trim();
+
+    if (passLamaStr.isEmpty() || passBaruStr.isEmpty() || konfirmStr.isEmpty()) {
+        JOptionPane.showMessageDialog(null, "Lengkapi semua field password!");
+        return;
+    }
+
+    if (!passBaruStr.equals(konfirmStr)) {
+        JOptionPane.showMessageDialog(null, "Password baru dan konfirmasi tidak cocok!");
+        return;
+    }
+
+    try {    
+        // Cek password lama (Mengakomodasi password polos tanpa MD5)
+        String sqlCek = "SELECT * FROM tb_user WHERE id_user='" + tkode_user.getText() + "' AND (password='" + passLamaStr + "' OR password=MD5('" + passLamaStr + "'))";                   
+        kon.rs = kon.st.executeQuery(sqlCek);             
+        
+        if (kon.rs.next()) {        
+            // Jika password lama benar, lakukan update
+            // Simpan password sebagai teks biasa tanpa fungsi MD5()
+            String sqlUpdate = "UPDATE tb_user SET password = '" + konfirmStr + "' WHERE id_user='" + tkode_user.getText() + "'";   
+            kon.st.executeUpdate(sqlUpdate);   
+            JOptionPane.showMessageDialog(null, "Password berhasil diperbarui!");       
+            bersih();
+            dispose(); // Tutup form setelah berhasil
+        } else {     
+            JOptionPane.showMessageDialog(null, "Password Lama Anda Salah!");                    
+            tpassLama.setText("");
+            tpassLama.requestFocus();                 
+        }          
+    } catch (SQLException e) {     
+        JOptionPane.showMessageDialog(null, "Error SQL: " + e.getMessage());   
+    } 
+    }
+    
+
+    /**
+     * This method is called from within the constructor to initialize the form.
+     * WARNING: Do NOT modify this code. The content of this method is always
+     * regenerated by the Form Editor.
+     */
+    @SuppressWarnings("unchecked")
+    // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
+    private void initComponents() {
+
+        jMenu1 = new javax.swing.JMenu();
+        jPanel1 = new javax.swing.JPanel();
+        jLabel2 = new javax.swing.JLabel();
+        jLabel3 = new javax.swing.JLabel();
+        jLabel4 = new javax.swing.JLabel();
+        jLabel5 = new javax.swing.JLabel();
+        jLabel6 = new javax.swing.JLabel();
+        tkode_user = new javax.swing.JTextField();
+        tpassLama = new javax.swing.JPasswordField();
+        tpassBaru = new javax.swing.JPasswordField();
+        tkonfirmPass = new javax.swing.JPasswordField();
+        btok = new javax.swing.JButton();
+        btkeluar = new javax.swing.JButton();
+        chkShowPassword = new javax.swing.JCheckBox();
+        jLabel1 = new javax.swing.JLabel();
+
+        jMenu1.setText("jMenu1");
+
+        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        addWindowListener(new java.awt.event.WindowAdapter() {
+            public void windowActivated(java.awt.event.WindowEvent evt) {
+                formWindowActivated(evt);
+            }
+        });
+        getContentPane().setLayout(new org.netbeans.lib.awtextra.AbsoluteLayout());
+
+        jPanel1.setBackground(new java.awt.Color(255, 204, 204));
+        jPanel1.setBorder(javax.swing.BorderFactory.createEtchedBorder(javax.swing.border.EtchedBorder.RAISED));
+
+        jLabel2.setFont(new java.awt.Font("Engravers MT", 0, 30)); // NOI18N
+        jLabel2.setText("Ganti Password");
+
+        jLabel3.setFont(new java.awt.Font("Stencil", 0, 18)); // NOI18N
+        jLabel3.setText("Kode user");
+
+        jLabel4.setFont(new java.awt.Font("Stencil", 0, 18)); // NOI18N
+        jLabel4.setText("Password Lama");
+
+        jLabel5.setFont(new java.awt.Font("Stencil", 0, 18)); // NOI18N
+        jLabel5.setText("Password Baru");
+
+        jLabel6.setFont(new java.awt.Font("Stencil", 0, 18)); // NOI18N
+        jLabel6.setText("Konfirmasi Password");
+
+        tkode_user.setText("jTextField1");
+
+        tpassLama.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tpassLamaActionPerformed(evt);
+            }
+        });
+
+        tpassBaru.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tpassBaruActionPerformed(evt);
+            }
+        });
+
+        tkonfirmPass.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tkonfirmPassActionPerformed(evt);
+            }
+        });
+        tkonfirmPass.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                tkonfirmPassKeyPressed(evt);
+            }
+        });
+
+        btok.setText("OK");
+        btok.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btokActionPerformed(evt);
+            }
+        });
+        btok.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                btokKeyPressed(evt);
+            }
+        });
+
+        btkeluar.setText("Keluar");
+        btkeluar.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btkeluarActionPerformed(evt);
+            }
+        });
+
+        chkShowPassword.setText("Lihat Password");
+        chkShowPassword.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                chkShowPasswordActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
+        jPanel1.setLayout(jPanel1Layout);
+        jPanel1Layout.setHorizontalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, jPanel1Layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(jLabel2)
+                .addGap(52, 52, 52))
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(33, 33, 33)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel3)
+                            .addComponent(jLabel6)
+                            .addComponent(jLabel5)
+                            .addComponent(jLabel4))
+                        .addGap(24, 24, 24)
+                        .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(tpassBaru, javax.swing.GroupLayout.Alignment.TRAILING)
+                                    .addComponent(tkode_user, javax.swing.GroupLayout.Alignment.TRAILING, javax.swing.GroupLayout.DEFAULT_SIZE, 146, Short.MAX_VALUE)
+                                    .addComponent(tkonfirmPass)
+                                    .addComponent(tpassLama))
+                                .addGap(61, 61, 61))
+                            .addGroup(jPanel1Layout.createSequentialGroup()
+                                .addComponent(chkShowPassword)
+                                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                    .addGroup(jPanel1Layout.createSequentialGroup()
+                        .addComponent(btok, javax.swing.GroupLayout.PREFERRED_SIZE, 101, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(18, 18, 18)
+                        .addComponent(btkeluar, javax.swing.GroupLayout.PREFERRED_SIZE, 100, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(0, 0, Short.MAX_VALUE))))
+        );
+        jPanel1Layout.setVerticalGroup(
+            jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(26, 26, 26)
+                .addComponent(jLabel2)
+                .addGap(32, 32, 32)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel3)
+                    .addComponent(tkode_user, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(9, 9, 9)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel4)
+                    .addComponent(tpassLama, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel5)
+                    .addComponent(tpassBaru, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(jLabel6)
+                    .addComponent(tkonfirmPass, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(chkShowPassword)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 30, Short.MAX_VALUE)
+                .addGroup(jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(btok, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(btkeluar, javax.swing.GroupLayout.PREFERRED_SIZE, 35, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addGap(20, 20, 20))
+        );
+
+        getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(80, 60, 480, 330));
+        getContentPane().add(jLabel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, -10, 610, 420));
+
+        pack();
+    }// </editor-fold>//GEN-END:initComponents
+
+    private void tpassLamaActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tpassLamaActionPerformed
+        // TODO add your handling code here:
+        passlama();
+    }//GEN-LAST:event_tpassLamaActionPerformed
+
+    private void tpassBaruActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tpassBaruActionPerformed
+        // TODO add your handling code here:
+        tkonfirmPass.setEnabled(true);
+        tkonfirmPass.requestFocus();
+    }//GEN-LAST:event_tpassBaruActionPerformed
+
+    private void tkonfirmPassActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tkonfirmPassActionPerformed
+  
+    }//GEN-LAST:event_tkonfirmPassActionPerformed
+
+    private void btokActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btokActionPerformed
+        if (!tpassBaru.isEnabled()) {
+        // Jika Password Baru masih terkunci, klik OK akan memvalidasi Password Lama
+        passlama();
+    } else {
+        // Jika Password Baru sudah terbuka, klik OK akan menyimpan password baru
+        konfirmpassword();
+    }
+    }//GEN-LAST:event_btokActionPerformed
+
+    private void btkeluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btkeluarActionPerformed
+        // TODO add your handling code here:
+        dispose();
+    }//GEN-LAST:event_btkeluarActionPerformed
+
+    private void formWindowActivated(java.awt.event.WindowEvent evt) {//GEN-FIRST:event_formWindowActivated
+        tkode_user.setText(Kode_User);  
+    tkode_user.setEnabled(false); // Kode user tetap terkunci
+    tpassLama.setEnabled(true);
+    tpassBaru.setEnabled(true);   // Langsung aktifkan
+    tkonfirmPass.setEnabled(true); // Langsung aktifkan
+    tpassLama.requestFocus();
+    }//GEN-LAST:event_formWindowActivated
+
+    private void btokKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_btokKeyPressed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_btokKeyPressed
+
+    private void tkonfirmPassKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tkonfirmPassKeyPressed
+              // TODO add your handling code here:
+        if(evt.getKeyCode()==KeyEvent.VK_ENTER)
+        {
+            konfirmpassword();
+        }
+    }//GEN-LAST:event_tkonfirmPassKeyPressed
+
+    private void chkShowPasswordActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_chkShowPasswordActionPerformed
+        togglePassword(tpassLama,tpassBaru, tkonfirmPass, chkShowPassword);
+    }//GEN-LAST:event_chkShowPasswordActionPerformed
+
+    /**
+     * @param args the command line arguments
+     */
+    public static void main(String args[]) {
+        /* Set the Nimbus look and feel */
+        //<editor-fold defaultstate="collapsed" desc=" Look and feel setting code (optional) ">
+        /* If Nimbus (introduced in Java SE 6) is not available, stay with the default look and feel.
+         * For details see http://download.oracle.com/javase/tutorial/uiswing/lookandfeel/plaf.html 
+         */
+        try {
+            for (javax.swing.UIManager.LookAndFeelInfo info : javax.swing.UIManager.getInstalledLookAndFeels()) {
+                if ("Nimbus".equals(info.getName())) {
+                    javax.swing.UIManager.setLookAndFeel(info.getClassName());
+                    break;
+                }
+            }
+        } catch (ClassNotFoundException ex) {
+            java.util.logging.Logger.getLogger(Form_Ganti_Password.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (InstantiationException ex) {
+            java.util.logging.Logger.getLogger(Form_Ganti_Password.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (IllegalAccessException ex) {
+            java.util.logging.Logger.getLogger(Form_Ganti_Password.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        } catch (javax.swing.UnsupportedLookAndFeelException ex) {
+            java.util.logging.Logger.getLogger(Form_Ganti_Password.class.getName()).log(java.util.logging.Level.SEVERE, null, ex);
+        }
+        //</editor-fold>
+        //</editor-fold>
+
+        /* Create and display the form */
+        java.awt.EventQueue.invokeLater(new Runnable() {
+            public void run() {
+                new Form_Ganti_Password().setVisible(true);
+            }
+        });
+    }
+
+    // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btkeluar;
+    private javax.swing.JButton btok;
+    private javax.swing.JCheckBox chkShowPassword;
+    private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel2;
+    private javax.swing.JLabel jLabel3;
+    private javax.swing.JLabel jLabel4;
+    private javax.swing.JLabel jLabel5;
+    private javax.swing.JLabel jLabel6;
+    private javax.swing.JMenu jMenu1;
+    private javax.swing.JPanel jPanel1;
+    private javax.swing.JTextField tkode_user;
+    private javax.swing.JPasswordField tkonfirmPass;
+    private javax.swing.JPasswordField tpassBaru;
+    private javax.swing.JPasswordField tpassLama;
+    // End of variables declaration//GEN-END:variables
+}

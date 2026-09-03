@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="Laporan_Barang" 
+              pageWidth="595" pageHeight="842" columnWidth="555" 
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+    
+    <!-- Query SQL untuk Mengambil Data dari MySQL -->
+    <queryString>
+        <![CDATA[SELECT kd_brg, nm_kategori, nm_brg, stok, min_stok FROM tb_barang ORDER BY kd_brg ASC]]>
+    </queryString>
+
+    <!-- Deklarasi Field Sesuai Kolom Database -->
+    <field name="kd_brg" class="java.lang.String"/>
+    <field name="nm_kategori" class="java.lang.String"/>
+    <field name="nm_brg" class="java.lang.String"/>
+    <field name="stok" class="java.lang.String"/>
+    <field name="min_stok" class="java.lang.String"/>
+
+    <!-- Judul Laporan -->
+    <title>
+        <band height="50">
+            <staticText>
+                <reportElement x="0" y="10" width="555" height="30"/>
+                <textElement textAlignment="Center">
+                    <font size="18" isBold="true"/>
+                </textElement>
+                <text><![CDATA[LAPORAN DATA BARANG GUDANG]]></text>
+            </staticText>
+        </band>
+    </title>
+
+    <!-- Header Tabel -->
+    <columnHeader>
+        <band height="25">
+            <staticText>
+                <reportElement x="0" y="0" width="100" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[KODE BARANG]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="100" y="0" width="120" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[KATEGORI]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="220" y="0" width="150" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[NAMA BARANG]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="370" y="0" width="80" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[STOK]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="450" y="0" width="105" height="20"/>
+                <textElement><font isBold="true"/></textElement>
+                <text><![CDATA[MIN. STOK]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <!-- Isi Data (Baris Berulang) -->
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="100" height="20"/>
+                <textFieldExpression><![CDATA[$F{kd_brg}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="100" y="0" width="120" height="20"/>
+                <textFieldExpression><![CDATA[$F{nm_kategori}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="220" y="0" width="150" height="20"/>
+                <textFieldExpression><![CDATA[$F{nm_brg}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="370" y="0" width="80" height="20"/>
+                <textFieldExpression><![CDATA[$F{stok}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="450" y="0" width="105" height="20"/>
+                <textFieldExpression><![CDATA[$F{min_stok}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+</jasperReport>
