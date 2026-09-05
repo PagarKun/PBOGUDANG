@@ -29,9 +29,15 @@ public class Form_Laporan_TransaksiPeriode extends javax.swing.JFrame {
      * Creates new form Form_Laporan_PengeluaranPeriode
      */
    public Form_Laporan_TransaksiPeriode() { 
-        initComponents(); 
-        kon.setkoneksi(); 
-    }
+    initComponents(); 
+    kon.setkoneksi(); 
+    
+    // Inisialisasi Pilihan Bulan di ComboBox
+    cmbbulan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { 
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December" 
+    }));
+}
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -171,36 +177,50 @@ public class Form_Laporan_TransaksiPeriode extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btcetakperiodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcetakperiodeActionPerformed
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-        String tgl1 = formatter.format(dctglawal.getDate());
-        String tgl2 = formatter.format(dctglakhir.getDate());
+        if (dctglawal.getDate() == null || dctglakhir.getDate() == null) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Pilih tanggal awal dan tanggal akhir terlebih dahulu!");
+        return;
+    }
 
-        try {
-            String NamaFile = "src/gudang/LLaporan_Transaksi_Pertanggal.jasper";
-            HashMap<String, Object> parameter = new HashMap<>();
-            parameter.put("tgl_awal", tgl1);
-            parameter.put("tgl_akhir", tgl2);
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    String tgl1 = formatter.format(dctglawal.getDate()); 
+    String tgl2 = formatter.format(dctglakhir.getDate()); 
 
-            JasperPrint print = JasperFillManager.fillReport(NamaFile, parameter, kon.setkoneksi());
-            JasperViewer.viewReport(print, false);
-        } catch (Exception ex) {
-            System.out.println(ex);
-        }
+    try { 
+        // Path fisik Maven yang benar
+        String NamaFile = "src/main/java/gudang/Laporan_Transaksi_Pertanggal.jasper"; 
+        
+        HashMap<String, Object> parameter = new HashMap<>(); 
+        parameter.put("tgl_awal", tgl1); 
+        parameter.put("tgl_akhir", tgl2); 
+
+        JasperPrint print = JasperFillManager.fillReport(NamaFile, parameter, kon.setkoneksi()); 
+        JasperViewer.viewReport(print, false); 
+    } catch (Exception ex) { 
+        ex.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Gagal Membuka Laporan Transaksi Pertanggal: " + ex.getMessage()); 
+    }
     }//GEN-LAST:event_btcetakperiodeActionPerformed
 
     private void btcetakbulanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcetakbulanActionPerformed
         try { 
-            String NamaFile = "src/gudang//Laporan_Transaksi_Perbulan.jasper"; 
+        // Path fisik Maven yang benar
+        String NamaFile = "src/main/java/gudang/Laporan_Transaksi_Perbulan.jasper"; 
 
-            HashMap<String, Object> parameter = new HashMap<>(); 
-            parameter.put("bulan", cmbbulan.getSelectedItem()); 
-            parameter.put("tahun", yctahun.getYear()); 
+        HashMap<String, Object> parameter = new HashMap<>(); 
+        
+        // Mengubah index bulan (0-11) menjadi angka bulan (1-12)
+        int bulanAngka = cmbbulan.getSelectedIndex() + 1;
+        
+        parameter.put("bulan_angka", bulanAngka); 
+        parameter.put("tahun", yctahun.getYear()); 
 
-            JasperPrint print = JasperFillManager.fillReport(NamaFile, parameter, kon.setkoneksi()); 
-            JasperViewer.viewReport(print, false); 
-        } catch (Exception ex) { 
-            System.out.println(ex); 
-        }
+        JasperPrint print = JasperFillManager.fillReport(NamaFile, parameter, kon.setkoneksi()); 
+        JasperViewer.viewReport(print, false); 
+    } catch (Exception ex) { 
+        ex.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Gagal Membuka Laporan Transaksi Perbulan: " + ex.getMessage()); 
+    }
     }//GEN-LAST:event_btcetakbulanActionPerformed
 
     private void bt_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_keluarActionPerformed

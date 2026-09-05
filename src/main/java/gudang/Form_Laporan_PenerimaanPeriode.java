@@ -7,6 +7,7 @@ package gudang;
 import com.mycompany.gudang.koneksi;
 import java.text.SimpleDateFormat;
 import java.util.HashMap;
+import javax.swing.JOptionPane;
 import net.sf.jasperreports.engine.JasperFillManager;
 import net.sf.jasperreports.engine.JasperPrint;
 import net.sf.jasperreports.engine.JasperReport;
@@ -28,10 +29,16 @@ public class Form_Laporan_PenerimaanPeriode extends javax.swing.JFrame {
     /**
      * Creates new form Form_Laporan_PenerimaanPeriode
      */
-    public Form_Laporan_PenerimaanPeriode() { 
-        initComponents(); 
-        kon.setkoneksi(); 
-    }
+   public Form_Laporan_PenerimaanPeriode() { 
+    initComponents(); 
+    kon.setkoneksi(); 
+    
+    // Inisialisasi Pilihan Bulan di ComboBox
+    cmbbulan.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { 
+        "January", "February", "March", "April", "May", "June", 
+        "July", "August", "September", "October", "November", "December" 
+    }));
+}
     
 
     /**
@@ -173,35 +180,57 @@ public class Form_Laporan_PenerimaanPeriode extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void btcetakperiodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcetakperiodeActionPerformed
-        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
-            String tgl1 = formatter.format(dctglawal.getDate()); 
-            String tgl2 = formatter.format(dctglakhir.getDate()); 
+        // Validasi input tanggal
+    if (dctglawal.getDate() == null || dctglakhir.getDate() == null) {
+        javax.swing.JOptionPane.showMessageDialog(this, "Pilih tanggal awal dan tanggal akhir terlebih dahulu!");
+        return;
+    }
 
-            try { 
-                String NamaFile = "src/gudang/Laporan_Penerimaan_Pertanggal.jasper"; 
-                HashMap<String, Object> parameter = new HashMap<>(); 
-                parameter.put("tgl_awal", tgl1); 
-                parameter.put("tgl_akhir", tgl2); 
+    SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+    String tgl1 = formatter.format(dctglawal.getDate()); 
+    String tgl2 = formatter.format(dctglakhir.getDate()); 
 
-                JasperPrint print = JasperFillManager.fillReport(NamaFile, parameter, kon.setkoneksi()); 
-                JasperViewer.viewReport(print, false); 
-            } catch (Exception ex) { 
-                System.out.println(ex); 
-}
-    }//GEN-LAST:event_btcetakperiodeActionPerformed
-
-    private void btcetakbulanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcetakbulanActionPerformed
-              try { 
-        String NamaFile = "src/gudang/Laporan_Penerimaan_Perbulan.jasper"; 
-
+    try { 
+        // Path Maven ke file .jasper
+        String NamaFile = "src/main/java/gudang/Laporan_Penerimaan_Pertanggal.jasper"; 
+        
         HashMap<String, Object> parameter = new HashMap<>(); 
-        parameter.put("bulan", cmbbulan.getSelectedItem()); 
-        parameter.put("tahun", yctahun.getYear()); 
+        parameter.put("tgl_awal", tgl1); 
+        parameter.put("tgl_akhir", tgl2); 
 
         JasperPrint print = JasperFillManager.fillReport(NamaFile, parameter, kon.setkoneksi()); 
         JasperViewer.viewReport(print, false); 
     } catch (Exception ex) { 
-        System.out.println(ex); 
+        ex.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(this, "Gagal Membuka Laporan Pertanggal: " + ex.getMessage()); 
+    }
+    }//GEN-LAST:event_btcetakperiodeActionPerformed
+
+    private void btcetakbulanActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btcetakbulanActionPerformed
+            try { 
+        String NamaFile = "src/main/java/gudang/Laporan_Penerimaan_Perbulan.jasper"; 
+
+        HashMap<String, Object> parameter = new HashMap<>(); 
+        
+        // Ambil urutan index (0 = Januari, 1 = Februari) lalu + 1 agar jadi (1 - 12)
+        int bulanAngka = cmbbulan.getSelectedIndex() + 1;
+        int tahunAngka = yctahun.getYear();
+
+        parameter.put("bulan_angka", bulanAngka); 
+        parameter.put("tahun", tahunAngka); 
+
+        JasperPrint print = JasperFillManager.fillReport(NamaFile, parameter, kon.setkoneksi()); 
+        
+        // Cek jika data kosong sebelum menampilkan viewer
+        if (print.getPages().isEmpty()) {
+            JOptionPane.showMessageDialog(this, "Tidak ada data penerimaan pada bulan " + cmbbulan.getSelectedItem() + " " + tahunAngka);
+        } else {
+            JasperViewer.viewReport(print, false); 
+        }
+
+    } catch (Exception ex) { 
+        ex.printStackTrace();
+        JOptionPane.showMessageDialog(this, "Gagal Membuka Laporan: " + ex.getMessage()); 
     }
     }//GEN-LAST:event_btcetakbulanActionPerformed
 

@@ -54,7 +54,7 @@
         </Menu>
         <Menu class="javax.swing.JMenu" name="jMenu2">
           <Properties>
-            <Property name="text" type="java.lang.String" value="Master"/>
+            <Property name="text" type="java.lang.String" value="Transaksi"/>
           </Properties>
           <SubComponents>
             <MenuItem class="javax.swing.JMenuItem" name="jbarang_masuk">
@@ -71,6 +71,14 @@
               </Properties>
               <Events>
                 <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jbarang_keluarActionPerformed"/>
+              </Events>
+            </MenuItem>
+            <MenuItem class="javax.swing.JMenuItem" name="jOrderInventoryUser">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Order Inventory"/>
+              </Properties>
+              <Events>
+                <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="jOrderInventoryUserActionPerformed"/>
               </Events>
             </MenuItem>
           </SubComponents>

@@ -7,6 +7,8 @@ package gudang;
 import com.mycompany.gudang.koneksi;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -130,6 +132,7 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         nmTranksaksi = new javax.swing.JMenu();
         jbarang_masuk = new javax.swing.JMenuItem();
         jbarang_keluar = new javax.swing.JMenuItem();
+        jOrderInventory = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         mnlapbrg = new javax.swing.JMenuItem();
         mnlapuser = new javax.swing.JMenuItem();
@@ -256,7 +259,7 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
 
         jMenuBar1.setBackground(new java.awt.Color(102, 102, 102));
 
-        jMenu1.setText("File");
+        jMenu1.setText("Keluar");
 
         mnlogout.setText("LogOut");
         mnlogout.addActionListener(this::mnlogoutActionPerformed);
@@ -298,6 +301,10 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         jbarang_keluar.addActionListener(this::jbarang_keluarActionPerformed);
         nmTranksaksi.add(jbarang_keluar);
 
+        jOrderInventory.setText("Order Inventory");
+        jOrderInventory.addActionListener(this::jOrderInventoryActionPerformed);
+        nmTranksaksi.add(jOrderInventory);
+
         jMenuBar1.add(nmTranksaksi);
 
         jMenu3.setText("Laporan");
@@ -310,6 +317,7 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         jMenu3.add(mnlapuser);
 
         mnlaporder.setText("Laporan Tranksaksi");
+        mnlaporder.addActionListener(this::mnlaporderActionPerformed);
         jMenu3.add(mnlaporder);
 
         mnLapBrgMsk.setText("Laporan Barang Masuk");
@@ -412,15 +420,28 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
     }//GEN-LAST:event_mnkategoriActionPerformed
 
     private void mnlapbrgActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnlapbrgActionPerformed
-         try {             
-            String path = "src/main/java/gudang/Laporan_Barang.jrxml";             
-            JasperReport jasperReport = JasperCompileManager.compileReport(path);
-            HashMap<String, Object> parameter = new HashMap<>();             
-            JasperPrint print = JasperFillManager.fillReport(jasperReport, parameter, kon.setkoneksi());             
-            JasperViewer.viewReport(print, false);         
-        } catch (Exception e) {             
-            JOptionPane.showMessageDialog(null, "Gagal Membuka Laporan: " + e.getMessage());         
+         try {
+        // Ambil file .jrxml dari lokasi fisik project Maven
+        File file = new File("src/main/java/gudang/Laporan_Barang.jrxml");
+        
+        if (!file.exists()) {
+            JOptionPane.showMessageDialog(null, "File tidak ditemukan di: " + file.getAbsolutePath());
+            return;
         }
+
+        // Kompilasi file .jrxml menjadi JasperReport
+        JasperReport jasperReport = JasperCompileManager.compileReport(file.getAbsolutePath());
+        
+        // Isi laporan dengan data dari database
+        HashMap<String, Object> parameter = new HashMap<>();
+        JasperPrint print = JasperFillManager.fillReport(jasperReport, parameter, kon.setkoneksi());
+        
+        // Tampilkan viewer
+        JasperViewer.viewReport(print, false);
+    } catch (Exception e) {
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Error Kompilasi: " + e.getLocalizedMessage());
+    }
     }//GEN-LAST:event_mnlapbrgActionPerformed
 
     private void mnLapBrgMskActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnLapBrgMskActionPerformed
@@ -448,6 +469,19 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         klr.setLocationRelativeTo(null); // Diperbaiki dari setLocationRealativeTo
         klr.setVisible(true);
     }//GEN-LAST:event_jdata_barangActionPerformed
+
+    private void jOrderInventoryActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jOrderInventoryActionPerformed
+        Form_Transaksi_Inventory formOrder = new Form_Transaksi_Inventory();
+        formOrder.setVisible(true);
+        formOrder.setIDUser(Ikode.getText());
+        formOrder.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jOrderInventoryActionPerformed
+
+    private void mnlaporderActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnlaporderActionPerformed
+        Form_Laporan_TransaksiPeriode Laporan_Klr = new Form_Laporan_TransaksiPeriode();        
+        Laporan_Klr.setLocationRelativeTo(null);
+        Laporan_Klr.setVisible(true);
+    }//GEN-LAST:event_mnlaporderActionPerformed
 
     /**
      * @param args the command line arguments
@@ -491,6 +525,7 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu6;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
+    private javax.swing.JMenuItem jOrderInventory;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

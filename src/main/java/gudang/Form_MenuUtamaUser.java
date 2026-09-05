@@ -7,6 +7,7 @@ package gudang;
 import com.mycompany.gudang.koneksi;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.InputStream;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -135,6 +136,7 @@ public class Form_MenuUtamaUser extends javax.swing.JFrame {
         jMenu2 = new javax.swing.JMenu();
         jbarang_masuk = new javax.swing.JMenuItem();
         jbarang_keluar = new javax.swing.JMenuItem();
+        jOrderInventoryUser = new javax.swing.JMenuItem();
         jMenu3 = new javax.swing.JMenu();
         mnlapbarang = new javax.swing.JMenuItem();
         mnlapbrgmsk = new javax.swing.JMenuItem();
@@ -339,7 +341,7 @@ public class Form_MenuUtamaUser extends javax.swing.JFrame {
 
         jMenuBar1.add(jMenu1);
 
-        jMenu2.setText("Master");
+        jMenu2.setText("Transaksi");
 
         jbarang_masuk.setText("Barang Masuk");
         jbarang_masuk.addActionListener(this::jbarang_masukActionPerformed);
@@ -348,6 +350,10 @@ public class Form_MenuUtamaUser extends javax.swing.JFrame {
         jbarang_keluar.setText("Barang Keluar");
         jbarang_keluar.addActionListener(this::jbarang_keluarActionPerformed);
         jMenu2.add(jbarang_keluar);
+
+        jOrderInventoryUser.setText("Order Inventory");
+        jOrderInventoryUser.addActionListener(this::jOrderInventoryUserActionPerformed);
+        jMenu2.add(jOrderInventoryUser);
 
         jMenuBar1.add(jMenu2);
 
@@ -401,13 +407,23 @@ public class Form_MenuUtamaUser extends javax.swing.JFrame {
     }//GEN-LAST:event_jbarang_keluarActionPerformed
 
     private void mnlapbarangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnlapbarangActionPerformed
-         try{             
-             String path="src/gudang/Laporan_Barang.jasper";             
-             HashMap parameter = new HashMap();             
-             JasperPrint print = JasperFillManager.fillReport(path,parameter,kon.setkoneksi());             
-             JasperViewer.viewReport(print, false);         }         
-         catch(Exception e) {             
-             JOptionPane.showMessageDialog(null, e);         } 
+            try { 
+        // Mengambil file jrxml dari lokasi resource package gudang
+        InputStream reportStream = getClass().getResourceAsStream("/gudang/Laporan_Barang.jrxml");
+        
+        if (reportStream == null) {
+            JOptionPane.showMessageDialog(null, "File Laporan_Barang.jrxml tidak ditemukan di package gudang!");
+            return;
+        }
+
+        JasperReport jasperReport = JasperCompileManager.compileReport(reportStream); 
+        HashMap<String, Object> parameter = new HashMap<>(); 
+        JasperPrint print = JasperFillManager.fillReport(jasperReport, parameter, kon.setkoneksi()); 
+        JasperViewer.viewReport(print, false); 
+    } catch (Exception e) { 
+        e.printStackTrace(); // Menampilkan detail error di Output Window NetBeans
+        JOptionPane.showMessageDialog(null, "Gagal Membuka Laporan: " + e.getMessage()); 
+    }
     }//GEN-LAST:event_mnlapbarangActionPerformed
 
     private void mnlapbrgklrActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnlapbrgklrActionPerformed
@@ -453,6 +469,13 @@ public class Form_MenuUtamaUser extends javax.swing.JFrame {
            Laporan_Msk.setVisible(true);      
     }//GEN-LAST:event_mnlapbrgmskActionPerformed
 
+    private void jOrderInventoryUserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jOrderInventoryUserActionPerformed
+        Form_Transaksi_Inventory formOrder = new Form_Transaksi_Inventory();
+        formOrder.setVisible(true);
+        formOrder.setIDUser(Ikode.getText());
+        formOrder.setLocationRelativeTo(null);
+    }//GEN-LAST:event_jOrderInventoryUserActionPerformed
+
     /**
      * @param args the command line arguments
      */
@@ -490,6 +513,7 @@ public class Form_MenuUtamaUser extends javax.swing.JFrame {
     private javax.swing.JMenu jMenu3;
     private javax.swing.JMenu jMenu4;
     private javax.swing.JMenuBar jMenuBar1;
+    private javax.swing.JMenuItem jOrderInventoryUser;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JPanel jPanel2;
     private javax.swing.JPanel jPanel3;

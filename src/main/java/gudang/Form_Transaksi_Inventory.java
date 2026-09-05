@@ -31,6 +31,9 @@ public class Form_Transaksi_Inventory extends javax.swing.JFrame {
         kon.setkoneksi(); 
         nonaktif();
     }
+    public void setIDUser(String idUser) {
+        tid_user.setText(idUser);
+    }
     
     public String kode; 
     public String getNik() 
@@ -282,17 +285,19 @@ java.text.SimpleDateFormat("yyyy-MM-dd");
         
     private void cetakstruk() 
     { 
-        try  
-        { 
-            String file = "src/gudang/PO.jasper"; 
-            HashMap param = new HashMap(); 
-            param.put("idorder",tid_order.getText()); 
-            JasperPrint print = JasperFillManager.fillReport(file,param,kon.setkoneksi()); 
-            JasperViewer.viewReport(print,false); 
-        } 
-        catch (Exception e) { 
-        JOptionPane.showMessageDialog(null,e.getMessage()); 
-        } 
+        try { 
+        // Ubah path sesuai struktur folder Maven
+        String file = "src/main/java/gudang/PO.jasper"; 
+        
+        HashMap<String, Object> param = new HashMap<>(); 
+        param.put("idorder", tid_order.getText()); 
+        
+        JasperPrint print = JasperFillManager.fillReport(file, param, kon.setkoneksi()); 
+        JasperViewer.viewReport(print, false); 
+    } catch (Exception e) { 
+        e.printStackTrace();
+        JOptionPane.showMessageDialog(null, "Gagal Mencetak Struk PO: " + e.getMessage()); 
+    }
     }
     /**
      * This method is called from within the constructor to initialize the form.
@@ -750,16 +755,19 @@ java.text.SimpleDateFormat("yyyy-MM-dd");
     private void bt_printActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_printActionPerformed
         // TODO add your handling code here:
         SimpanOrder(); 
-        bt_tambah.setEnabled(true); 
-        JOptionPane.showMessageDialog(this,"Berhasil disimpan", 
-            "Informasi",JOptionPane.INFORMATION_MESSAGE); 
-        TampilanTabelSementara(); 
-        cetakstruk(); 
-        HapusTabelSementara(); 
-        nonaktif(); 
-        Bersih(); 
-        TampilanTabelSementara(); 
-        tid_order.setText(""); 
+    
+    // 2. Cetak struk SEBELUM textfield dibersihkan!
+    cetakstruk(); 
+    
+    // 3. Bersihkan tabel sementara dan inputan
+    HapusTabelSementara(); 
+    nonaktif(); 
+    Bersih(); 
+    tid_order.setText(""); 
+    bt_tambah.setEnabled(true); 
+    
+    JOptionPane.showMessageDialog(this, "Berhasil disimpan dan dicetak", 
+        "Informasi", JOptionPane.INFORMATION_MESSAGE); 
     }//GEN-LAST:event_bt_printActionPerformed
 
     private void bt_hapusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_hapusActionPerformed

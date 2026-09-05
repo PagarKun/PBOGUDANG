@@ -2,38 +2,53 @@
 <jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
               xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
               xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
-              name="Laporan_Barang" 
+              name="Laporan_Penerimaan_Pertanggal" 
+              whenNoDataType="AllSectionsNoDetail"
               pageWidth="595" pageHeight="842" columnWidth="555" 
               leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
 
-    <!-- Query SQL -->
+    <!-- Parameter Filter Rentang Tanggal -->
+    <parameter name="tgl_awal" class="java.lang.String"/>
+    <parameter name="tgl_akhir" class="java.lang.String"/>
+
+    <!-- Query SQL Database -->
     <queryString>
-        <![CDATA[SELECT kd_brg, nm_kategori, nm_brg, stok, min_stok FROM tb_barang ORDER BY kd_brg ASC]]>
+        <![CDATA[
+            SELECT 
+                p.invoice, 
+                p.tgl_penerimaan, 
+                d.kd_barang, 
+                b.nm_brg, 
+                d.jml, 
+                COALESCE(u.nm_user, '-') AS nm_user 
+            FROM tb_penerimaan_barang p
+            INNER JOIN tb_detail_penerimaan d ON p.invoice = d.invoice
+            INNER JOIN tb_barang b ON d.kd_barang = b.kd_brg
+            LEFT JOIN tb_user u ON p.id_user = u.id_user
+            WHERE p.tgl_penerimaan BETWEEN $P{tgl_awal} AND $P{tgl_akhir}
+            ORDER BY p.tgl_penerimaan ASC, p.invoice ASC
+        ]]>
     </queryString>
 
-    <!-- Field Database -->
-    <field name="kd_brg" class="java.lang.String"/>
-    <field name="nm_kategori" class="java.lang.String"/>
+    <!-- Deklarasi Field -->
+    <field name="invoice" class="java.lang.String"/>
+    <field name="tgl_penerimaan" class="java.sql.Date"/>
+    <field name="kd_barang" class="java.lang.String"/>
     <field name="nm_brg" class="java.lang.String"/>
-    <field name="stok" class="java.lang.String"/>
-    <field name="min_stok" class="java.lang.String"/>
+    <field name="jml" class="java.lang.Integer"/>
+    <field name="nm_user" class="java.lang.String"/>
 
-    <!-- Kop / Title Laporan -->
+    <!-- Kop Header SMKN 2 BEKASI -->
     <title>
         <band height="120">
-            <!-- Frame Kotak Header Utama -->
-            <line>
-                <reportElement x="0" y="0" width="555" height="1"/>
-            </line>
-            
+            <line><reportElement x="0" y="0" width="555" height="1"/></line>
             <staticText>
                 <reportElement x="0" y="5" width="555" height="25"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
                     <font size="16" isBold="true"/>
                 </textElement>
-                <text><![CDATA[LAPORAN BARANG]]></text>
+                <text><![CDATA[LAPORAN PENERIMAAN BARANG PERTANGGAL]]></text>
             </staticText>
-
             <staticText>
                 <reportElement x="0" y="30" width="555" height="25"/>
                 <textElement textAlignment="Center" verticalAlignment="Middle">
@@ -41,48 +56,29 @@
                 </textElement>
                 <text><![CDATA[SMKN 2 BEKASI]]></text>
             </staticText>
-
             <staticText>
                 <reportElement x="0" y="55" width="555" height="15"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9"/>
-                </textElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9"/></textElement>
                 <text><![CDATA[Jl. Lap Bola Rawa Butun Ciketing Udik Bantargebang Kota Bekasi 17153]]></text>
             </staticText>
-
             <staticText>
                 <reportElement x="0" y="70" width="555" height="15"/>
-                <textElement textAlignment="Center" verticalAlignment="Middle">
-                    <font size="9"/>
-                </textElement>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9"/></textElement>
                 <text><![CDATA[Phone: (021) 82597121 | Email: smkn2kotabekasi@gmail.com]]></text>
             </staticText>
+            <line><reportElement x="0" y="90" width="555" height="1"/></line>
 
-            <line>
-                <reportElement x="0" y="90" width="555" height="1"/>
-            </line>
-
-            <!-- Tanggal Cetak Otomatis (Sebelah Kiri) -->
             <textField pattern="EEEE, dd MMMM yyyy">
                 <reportElement x="0" y="95" width="250" height="20"/>
-                <textElement verticalAlignment="Middle">
-                    <font size="9" isItalic="true"/>
-                </textElement>
+                <textElement verticalAlignment="Middle"><font size="9" isItalic="true"/></textElement>
                 <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
             </textField>
-
-            <!-- Nomor Halaman (Sebelah Kanan) -->
             <textField>
                 <reportElement x="355" y="95" width="200" height="20"/>
-                <textElement textAlignment="Right" verticalAlignment="Middle">
-                    <font size="9"/>
-                </textElement>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="9"/></textElement>
                 <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
             </textField>
-            
-            <line>
-                <reportElement x="0" y="118" width="555" height="1"/>
-            </line>
+            <line><reportElement x="0" y="118" width="555" height="1"/></line>
         </band>
     </title>
 
@@ -93,67 +89,79 @@
                 <reportElement mode="Opaque" x="0" y="0" width="90" height="25" backcolor="#CCCCCC"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
-                <text><![CDATA[KODE BARANG]]></text>
+                <text><![CDATA[INVOICE]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="90" y="0" width="110" height="25" backcolor="#CCCCCC"/>
+                <reportElement mode="Opaque" x="90" y="0" width="80" height="25" backcolor="#CCCCCC"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
-                <text><![CDATA[KATEGORI]]></text>
+                <text><![CDATA[TANGGAL]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="200" y="0" width="175" height="25" backcolor="#CCCCCC"/>
+                <reportElement mode="Opaque" x="170" y="0" width="80" height="25" backcolor="#CCCCCC"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[KODE BRG]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="250" y="0" width="145" height="25" backcolor="#CCCCCC"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
                 <text><![CDATA[NAMA BARANG]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="375" y="0" width="90" height="25" backcolor="#CCCCCC"/>
+                <reportElement mode="Opaque" x="395" y="0" width="60" height="25" backcolor="#CCCCCC"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
-                <text><![CDATA[STOK]]></text>
+                <text><![CDATA[JUMLAH]]></text>
             </staticText>
             <staticText>
-                <reportElement mode="Opaque" x="465" y="0" width="90" height="25" backcolor="#CCCCCC"/>
+                <reportElement mode="Opaque" x="455" y="0" width="100" height="25" backcolor="#CCCCCC"/>
                 <box><pen lineWidth="0.5"/></box>
                 <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
-                <text><![CDATA[MIN. STOK]]></text>
+                <text><![CDATA[PETUGAS]]></text>
             </staticText>
         </band>
     </columnHeader>
 
-    <!-- Isi Data Tabel -->
+    <!-- Detail Data -->
     <detail>
         <band height="20">
             <textField>
                 <reportElement x="0" y="0" width="90" height="20"/>
                 <box leftPadding="5"><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle"/>
-                <textFieldExpression><![CDATA[$F{kd_brg}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{invoice}]]></textFieldExpression>
             </textField>
-            <textField>
-                <reportElement x="90" y="0" width="110" height="20"/>
+            <textField pattern="dd/MM/yyyy">
+                <reportElement x="90" y="0" width="80" height="20"/>
                 <box leftPadding="5"><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle"/>
-                <textFieldExpression><![CDATA[$F{nm_kategori}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{tgl_penerimaan}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="200" y="0" width="175" height="20"/>
+                <reportElement x="170" y="0" width="80" height="20"/>
+                <box leftPadding="5"><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{kd_barang}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="250" y="0" width="145" height="20"/>
                 <box leftPadding="5"><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle"/>
                 <textFieldExpression><![CDATA[$F{nm_brg}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="375" y="0" width="90" height="20"/>
+                <reportElement x="395" y="0" width="60" height="20"/>
                 <box leftPadding="5"><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle"/>
-                <textFieldExpression><![CDATA[$F{stok}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{jml}]]></textFieldExpression>
             </textField>
             <textField>
-                <reportElement x="465" y="0" width="90" height="20"/>
+                <reportElement x="455" y="0" width="100" height="20"/>
                 <box leftPadding="5"><pen lineWidth="0.5"/></box>
                 <textElement verticalAlignment="Middle"/>
-                <textFieldExpression><![CDATA[$F{min_stok}]]></textFieldExpression>
+                <textFieldExpression><![CDATA[$F{nm_user}]]></textFieldExpression>
             </textField>
         </band>
     </detail>

@@ -1,0 +1,278 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="PO" 
+              whenNoDataType="AllSectionsNoDetail"
+              pageWidth="595" pageHeight="842" columnWidth="555" 
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <!-- Parameter ID Order dari Form -->
+    <parameter name="idorder" class="java.lang.String"/>
+
+    <!-- Query SQL Presisi Sesuai Database -->
+    <queryString>
+        <![CDATA[
+            SELECT 
+                o.id_order, 
+                o.tgl_order, 
+                COALESCE(o.id_user, '-') AS id_user,
+                COALESCE(u.nm_user, '-') AS nm_user,
+                d.kd_brg, 
+                b.nm_brg, 
+                d.jml_order 
+            FROM tb_order_inventory o
+            INNER JOIN tb_detail_orderinventory d ON o.id_order = d.id_order
+            INNER JOIN tb_barang b ON d.kd_brg = b.kd_brg
+            LEFT JOIN tb_user u ON o.id_user = u.id_user
+            WHERE o.id_order = $P{idorder}
+        ]]>
+    </queryString>
+
+    <!-- Field Hasil Query -->
+    <field name="id_order" class="java.lang.String"/>
+    <field name="tgl_order" class="java.sql.Date"/>
+    <field name="id_user" class="java.lang.String"/>
+    <field name="nm_user" class="java.lang.String"/>
+    <field name="kd_brg" class="java.lang.String"/>
+    <field name="nm_brg" class="java.lang.String"/>
+    <field name="jml_order" class="java.lang.Integer"/>
+
+    <!-- Title / Kop Surat -->
+    <title>
+        <band height="90">
+            <line><reportElement x="0" y="0" width="555" height="1"/></line>
+            <staticText>
+                <reportElement x="0" y="5" width="555" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[FORM ORDER]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="30" width="555" height="20"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="14" isBold="true"/>
+                </textElement>
+                <text><![CDATA[SMKN 2 BEKASI]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="50" width="555" height="15"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8"/></textElement>
+                <text><![CDATA[Jl. Lap Bola Rawa Butun Ciketing Udik Bantargebang Kota Bekasi 17153]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="65" width="555" height="15"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8"/></textElement>
+                <text><![CDATA[Tlpn : (021) 82597121]]></text>
+            </staticText>
+            <line><reportElement x="0" y="85" width="555" height="1"/></line>
+        </band>
+    </title>
+
+    <!-- Page Header (Identitas Order & User Sesuai Modul) -->
+    <pageHeader>
+        <band height="65">
+            <line><reportElement x="0" y="0" width="555" height="1"/></line>
+            
+            <!-- Kolom Kiri -->
+            <staticText>
+                <reportElement x="10" y="5" width="70" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[ID Order]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="80" y="5" width="10" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="90" y="5" width="150" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{id_order}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="10" y="25" width="70" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Tanggal]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="80" y="25" width="10" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[:]]></text>
+            </staticText>
+            <textField pattern="dd/MM/yyyy">
+                <reportElement x="90" y="25" width="150" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{tgl_order}]]></textFieldExpression>
+            </textField>
+
+            <!-- Kolom Kanan -->
+            <staticText>
+                <reportElement x="340" y="5" width="60" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[ID User]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="400" y="5" width="10" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="410" y="5" width="135" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{id_user}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="340" y="25" width="60" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Nama]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="400" y="25" width="10" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[:]]></text>
+            </staticText>
+            <textField>
+                <reportElement x="410" y="25" width="135" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{nm_user}]]></textFieldExpression>
+            </textField>
+
+            <staticText>
+                <reportElement x="340" y="43" width="60" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[Bagian]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="400" y="43" width="10" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[:]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="410" y="43" width="135" height="18"/>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[Logistic]]></text>
+            </staticText>
+
+            <line><reportElement x="0" y="62" width="555" height="1"/></line>
+        </band>
+    </pageHeader>
+
+    <!-- Column Header Tabel -->
+    <columnHeader>
+        <band height="20">
+            <staticText>
+                <reportElement mode="Opaque" x="50" y="0" width="150" height="20" backcolor="#FFFFFF"/>
+                <box><pen lineWidth="0.5" lineStyle="Dashed"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[KODE BARANG]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="200" y="0" width="200" height="20" backcolor="#FFFFFF"/>
+                <box><pen lineWidth="0.5" lineStyle="Dashed"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[NAMA BARANG]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="400" y="0" width="105" height="20" backcolor="#FFFFFF"/>
+                <box><pen lineWidth="0.5" lineStyle="Dashed"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9" isBold="true"/></textElement>
+                <text><![CDATA[JUMLAH]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <!-- Detail Data -->
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="50" y="0" width="150" height="20"/>
+                <box><pen lineWidth="0.5" lineStyle="Dashed"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{kd_brg}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="200" y="0" width="200" height="20"/>
+                <box leftPadding="5"><pen lineWidth="0.5" lineStyle="Dashed"/></box>
+                <textElement verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{nm_brg}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="400" y="0" width="105" height="20"/>
+                <box><pen lineWidth="0.5" lineStyle="Dashed"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA[$F{jml_order}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+    <!-- Summary / Footer (Keterangan & Tanda Tangan Sesuai Modul) -->
+    <summary>
+        <band height="100">
+            <!-- Kotak Tanda Tangan -->
+            <staticText>
+                <reportElement x="300" y="15" width="115" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8" isBold="true"/></textElement>
+                <text><![CDATA[Diajukan,]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="415" y="15" width="115" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8" isBold="true"/></textElement>
+                <text><![CDATA[Disetujui,]]></text>
+            </staticText>
+            
+            <staticText>
+                <reportElement x="300" y="30" width="115" height="40"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement/><text><![CDATA[]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="415" y="30" width="115" height="40"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement/><text><![CDATA[]]></text>
+            </staticText>
+
+            <textField>
+                <reportElement x="300" y="70" width="115" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8"/></textElement>
+                <textFieldExpression><![CDATA[$F{nm_user}]]></textFieldExpression>
+            </textField>
+            <staticText>
+                <reportElement x="415" y="70" width="115" height="15"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="8"/></textElement>
+                <text><![CDATA[Yohannes Eko]]></text>
+            </staticText>
+
+            <!-- Keterangan Warna Form -->
+            <staticText>
+                <reportElement x="10" y="35" width="80" height="12"/>
+                <textElement><font size="8" isBold="true"/></textElement>
+                <text><![CDATA[Keterangan :]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="10" y="47" width="220" height="12"/>
+                <textElement><font size="8"/></textElement>
+                <text><![CDATA[- Form warna putih untuk Purchasing]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="10" y="59" width="220" height="12"/>
+                <textElement><font size="8"/></textElement>
+                <text><![CDATA[- Form warna biru untuk Gudang]]></text>
+            </staticText>
+
+            <staticText>
+                <reportElement x="330" y="87" width="220" height="12"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="7" isItalic="true"/></textElement>
+                <text><![CDATA[F-GD-001 rev 01 Effective Date : 01/07/2010]]></text>
+            </staticText>
+        </band>
+    </summary>
+
+</jasperReport>
