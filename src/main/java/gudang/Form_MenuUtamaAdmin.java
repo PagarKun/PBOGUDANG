@@ -325,6 +325,7 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         jMenu4.setText("Data");
 
         jdata_barang.setText("Data Barang ");
+        jdata_barang.addActionListener(this::jdata_barangActionPerformed);
         jMenu4.add(jdata_barang);
 
         jstok_min.setText("Stok Barang Minimal");
@@ -441,6 +442,12 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         klr.setIDUser(Ikode.getText());  // Mengirim ID User login
         klr.setVisible(true);
     }//GEN-LAST:event_jbarang_keluarActionPerformed
+
+    private void jdata_barangActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jdata_barangActionPerformed
+        Form_Data_Barang klr = new Form_Data_Barang();
+        klr.setLocationRelativeTo(null); // Diperbaiki dari setLocationRealativeTo
+        klr.setVisible(true);
+    }//GEN-LAST:event_jdata_barangActionPerformed
 
     /**
      * @param args the command line arguments
