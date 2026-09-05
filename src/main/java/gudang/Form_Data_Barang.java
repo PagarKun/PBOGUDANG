@@ -149,7 +149,6 @@ public class Form_Data_Barang extends javax.swing.JFrame {
         jScrollPane1.setViewportView(tbl_barang);
 
         tcari.setBackground(new java.awt.Color(153, 153, 153));
-        tcari.setText("Cari Barang");
         tcari.addActionListener(this::tcariActionPerformed);
         tcari.addKeyListener(new java.awt.event.KeyAdapter() {
             public void keyTyped(java.awt.event.KeyEvent evt) {
