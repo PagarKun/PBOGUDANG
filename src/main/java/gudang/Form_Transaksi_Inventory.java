@@ -31,8 +31,11 @@ public class Form_Transaksi_Inventory extends javax.swing.JFrame {
         kon.setkoneksi(); 
         nonaktif();
     }
-    public void setIDUser(String idUser) {
-        tid_user.setText(idUser);
+    private String idUserLogin = "";
+
+    public void setIDUser(String id) {
+        this.idUserLogin = id;
+        tid_user.setText(id);
     }
     
     public String kode; 
@@ -45,13 +48,14 @@ public class Form_Transaksi_Inventory extends javax.swing.JFrame {
     public String NmKategori;
     public String NmBrg; 
      
-    private void Bersih(){ 
-        ttgl_order.setText(""); 
-        tid_user.setText(""); 
-        tkd_brg.setText(""); 
-        tnm_kategori.setText(""); 
-        tnm_brg.setText(""); 
-        tjml_order.setText(""); 
+    private void Bersih() { 
+    ttgl_order.setText(""); 
+    // tid_user tetap diisi dengan ID User login
+    tid_user.setText(idUserLogin); 
+    tkd_brg.setText(""); 
+    tnm_kategori.setText(""); 
+    tnm_brg.setText(""); 
+    tjml_order.setText(""); 
     } 
      
     private void aktif(){ 
@@ -740,13 +744,15 @@ java.text.SimpleDateFormat("yyyy-MM-dd");
         // TODO add your handling code here:
         NoOrder(); 
         setTanggalskr(); 
+        tid_user.setText(idUserLogin); // Memastikan ID User selalu terisi otomatis
+
         bt_batal.setEnabled(true); 
         bt_tambah.setEnabled(false); 
         bt_print.setEnabled(true); 
         bt_browse.setEnabled(true); 
         tid_order.setEnabled(true); 
         ttgl_order.setEnabled(true); 
-        tid_user.setEnabled(true); 
+        tid_user.setEnabled(false); // Kunci agar ID User tidak bisa diubah sembarangan
         tkd_brg.setEnabled(true); 
         tnm_kategori.setEnabled(true); 
         tnm_brg.setEnabled(true);

@@ -1,0 +1,119 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<jasperReport xmlns="http://jasperreports.sourceforge.net/jasperreports" 
+              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+              xsi:schemaLocation="http://jasperreports.sourceforge.net/jasperreports http://jasperreports.sourceforge.net/xsd/jasperreport.xsd" 
+              name="Laporan_User" 
+              whenNoDataType="AllSectionsNoDetail"
+              pageWidth="595" pageHeight="842" columnWidth="555" 
+              leftMargin="20" rightMargin="20" topMargin="20" bottomMargin="20">
+
+    <!-- Query SQL Mengambil Semua Data User -->
+    <queryString>
+        <![CDATA[
+            SELECT 
+                id_user AS tb_user_id_user, 
+                nm_user AS tb_user_nm_user, 
+                Level AS tb_user_level 
+            FROM tb_user
+            ORDER BY id_user ASC
+        ]]>
+    </queryString>
+
+    <!-- Deklarasi Field -->
+    <field name="tb_user_id_user" class="java.lang.String"/>
+    <field name="tb_user_nm_user" class="java.lang.String"/>
+    <field name="tb_user_level" class="java.lang.String"/>
+
+    <!-- Kop Header SMKN 2 BEKASI -->
+    <title>
+        <band height="120">
+            <line><reportElement x="0" y="0" width="555" height="1"/></line>
+            <staticText>
+                <reportElement x="0" y="5" width="555" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="16" isBold="true"/>
+                </textElement>
+                <text><![CDATA[LAPORAN USER]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="30" width="555" height="25"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle">
+                    <font size="15" isBold="true"/>
+                </textElement>
+                <text><![CDATA[SMKN 2 BEKASI]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="55" width="555" height="15"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[Jl. Lap Bola Rawa Butun Ciketing Udik Bantargebang Kota Bekasi 17153]]></text>
+            </staticText>
+            <staticText>
+                <reportElement x="0" y="70" width="555" height="15"/>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font size="9"/></textElement>
+                <text><![CDATA[Phone: (021) 82597121 | Email: smkn2kotabekasi@gmail.com]]></text>
+            </staticText>
+            <line><reportElement x="0" y="90" width="555" height="1"/></line>
+
+            <textField pattern="EEEE, dd MMMM yyyy">
+                <reportElement x="0" y="95" width="250" height="20"/>
+                <textElement verticalAlignment="Middle"><font size="9" isItalic="true"/></textElement>
+                <textFieldExpression><![CDATA[new java.util.Date()]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="355" y="95" width="200" height="20"/>
+                <textElement textAlignment="Right" verticalAlignment="Middle"><font size="9"/></textElement>
+                <textFieldExpression><![CDATA["Page " + $V{PAGE_NUMBER}]]></textFieldExpression>
+            </textField>
+            <line><reportElement x="0" y="118" width="555" height="1"/></line>
+        </band>
+    </title>
+
+    <!-- Header Tabel sesuai Gambar Modul -->
+    <columnHeader>
+        <band height="25">
+            <staticText>
+                <reportElement mode="Opaque" x="0" y="0" width="150" height="25" backcolor="#CCCCCC"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[ID USER]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="150" y="0" width="230" height="25" backcolor="#CCCCCC"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[NAMA USER]]></text>
+            </staticText>
+            <staticText>
+                <reportElement mode="Opaque" x="380" y="0" width="175" height="25" backcolor="#CCCCCC"/>
+                <box><pen lineWidth="0.5"/></box>
+                <textElement textAlignment="Center" verticalAlignment="Middle"><font isBold="true"/></textElement>
+                <text><![CDATA[LEVEL]]></text>
+            </staticText>
+        </band>
+    </columnHeader>
+
+    <!-- Detail Data -->
+    <detail>
+        <band height="20">
+            <textField>
+                <reportElement x="0" y="0" width="150" height="20"/>
+                <box leftPadding="5"><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{tb_user_id_user}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="150" y="0" width="230" height="20"/>
+                <box leftPadding="5"><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{tb_user_nm_user}]]></textFieldExpression>
+            </textField>
+            <textField>
+                <reportElement x="380" y="0" width="175" height="20"/>
+                <box leftPadding="5"><pen lineWidth="0.5"/></box>
+                <textElement verticalAlignment="Middle"/>
+                <textFieldExpression><![CDATA[$F{tb_user_level}]]></textFieldExpression>
+            </textField>
+        </band>
+    </detail>
+
+</jasperReport>

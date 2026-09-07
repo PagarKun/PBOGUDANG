@@ -117,6 +117,7 @@ public class Form_Data_Barang extends javax.swing.JFrame {
         tbl_barang = new javax.swing.JTable();
         tcari = new javax.swing.JTextField();
         jLabel1 = new javax.swing.JLabel();
+        bt_keluar = new javax.swing.JButton();
 
         jToggleButton1.setText("jToggleButton1");
 
@@ -160,6 +161,9 @@ public class Form_Data_Barang extends javax.swing.JFrame {
         jLabel1.setText("Cari Barang");
         jLabel1.setMaximumSize(new java.awt.Dimension(75, 16));
 
+        bt_keluar.setText("Keluar");
+        bt_keluar.addActionListener(this::bt_keluarActionPerformed);
+
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
         jPanel1Layout.setHorizontalGroup(
@@ -172,6 +176,10 @@ public class Form_Data_Barang extends javax.swing.JFrame {
                         .addGap(0, 0, Short.MAX_VALUE))
                     .addComponent(jLabel1, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                 .addContainerGap())
+            .addGroup(jPanel1Layout.createSequentialGroup()
+                .addGap(220, 220, 220)
+                .addComponent(bt_keluar, javax.swing.GroupLayout.PREFERRED_SIZE, 199, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
         );
         jPanel1Layout.setVerticalGroup(
             jPanel1Layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -182,7 +190,9 @@ public class Form_Data_Barang extends javax.swing.JFrame {
                 .addComponent(tcari, javax.swing.GroupLayout.PREFERRED_SIZE, 43, javax.swing.GroupLayout.PREFERRED_SIZE)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(jScrollPane1, javax.swing.GroupLayout.PREFERRED_SIZE, 149, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(113, Short.MAX_VALUE))
+                .addGap(18, 18, 18)
+                .addComponent(bt_keluar, javax.swing.GroupLayout.DEFAULT_SIZE, 68, Short.MAX_VALUE)
+                .addGap(27, 27, 27))
         );
 
         getContentPane().add(jPanel1, new org.netbeans.lib.awtextra.AbsoluteConstraints(0, 0, 650, 370));
@@ -201,6 +211,10 @@ public class Form_Data_Barang extends javax.swing.JFrame {
     private void tcariKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_tcariKeyTyped
        CariTabelBarang(); 
     }//GEN-LAST:event_tcariKeyTyped
+
+    private void bt_keluarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_bt_keluarActionPerformed
+        dispose();
+    }//GEN-LAST:event_bt_keluarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -228,6 +242,7 @@ public class Form_Data_Barang extends javax.swing.JFrame {
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton bt_keluar;
     private javax.swing.JComboBox<String> jComboBox1;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JPanel jPanel1;

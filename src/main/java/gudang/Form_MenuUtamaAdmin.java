@@ -314,6 +314,7 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         jMenu3.add(mnlapbrg);
 
         mnlapuser.setText("Laporan User");
+        mnlapuser.addActionListener(this::mnlapuserActionPerformed);
         jMenu3.add(mnlapuser);
 
         mnlaporder.setText("Laporan Tranksaksi");
@@ -482,6 +483,26 @@ public class Form_MenuUtamaAdmin extends javax.swing.JFrame {
         Laporan_Klr.setLocationRelativeTo(null);
         Laporan_Klr.setVisible(true);
     }//GEN-LAST:event_mnlaporderActionPerformed
+
+    private void mnlapuserActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_mnlapuserActionPerformed
+        try {
+        java.io.File file = new java.io.File("src/main/java/gudang/Laporan_User.jrxml");
+        
+        if (!file.exists()) {
+            javax.swing.JOptionPane.showMessageDialog(null, "File tidak ditemukan di: " + file.getAbsolutePath());
+            return;
+        }
+
+        net.sf.jasperreports.engine.JasperReport jasperReport = net.sf.jasperreports.engine.JasperCompileManager.compileReport(file.getAbsolutePath());
+        java.util.HashMap<String, Object> parameter = new java.util.HashMap<>();
+        net.sf.jasperreports.engine.JasperPrint print = net.sf.jasperreports.engine.JasperFillManager.fillReport(jasperReport, parameter, kon.setkoneksi());
+        
+        net.sf.jasperreports.view.JasperViewer.viewReport(print, false);
+    } catch (Exception e) {
+        e.printStackTrace();
+        javax.swing.JOptionPane.showMessageDialog(null, "Gagal Mencetak Laporan User: " + e.getLocalizedMessage());
+    }
+    }//GEN-LAST:event_mnlapuserActionPerformed
 
     /**
      * @param args the command line arguments

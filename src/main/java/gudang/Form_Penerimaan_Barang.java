@@ -347,6 +347,11 @@ public void setIDUser(String idUser) {
         });
 
         tid_user.setEditable(false);
+        tid_user.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                tid_userActionPerformed(evt);
+            }
+        });
 
         javax.swing.GroupLayout jPanel1Layout = new javax.swing.GroupLayout(jPanel1);
         jPanel1.setLayout(jPanel1Layout);
@@ -754,6 +759,10 @@ public void setIDUser(String idUser) {
         bt_tambah.setEnabled(true); 
         bt_keluar.setEnabled(true);
     }//GEN-LAST:event_bt_simpanActionPerformed
+
+    private void tid_userActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tid_userActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tid_userActionPerformed
 
     /**
      * @param args the command line arguments
